@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+
+  <transactionManager type="JDBC" commitRequired="false">
+    <dataSource type="SIMPLE">
+      <property name="JDBC.Driver" value="com.mysql.jdbc.Driver"/>
+      <property name="JDBC.ConnectionURL" value="jdbc:mysql://localhost/bbs?useUnicode=true&amp;characterEncoding=euckr"/>
+      <property name="JDBC.Username" value="bbs"/>
+      <property name="JDBC.Password" value="bbs"/>
+    </dataSource>
+  </transactionManager>
+  <sqlMap resource="sqlmapclient/flex_board.xml"/>  
+</sqlMapConfig>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" 
+"http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap>
+  <typeAlias alias="Board" type="com.board.model.BoardVo"/>
+  <resultMap id="BoardResult" class="Board" >
+   	<result property="seq" column="seq" columnIndex="1"/>
+    <result property="writer" column="writer" columnIndex="2"/>
+    <result property="title" column="title" columnIndex="4"/>    
+    <result property="content" column="content" columnIndex="5"/>
+    <result property="pwd" column="pwd" columnIndex="6"/>
+    <result property="hit" column="hit" columnIndex="7"/>
+    <result property="groups" column="groups" columnIndex="8"/>
+    <result property="step" column="step" columnIndex="9"/>
+    <result property="level" column="level" columnIndex="10"/>
+    <result property="bname" column="bname" columnIndex="11"/>
+    <result property="regdate" column="regdate" columnIndex="12"/>
+  </resultMap>
+  
+  <select id="BoardList" parameterClass="java.util.Map" resultClass="xml">
+	select seq, writer, title, content, pwd, hit, groups, step, level, bname, regdate from board	
+	<dynamic prepend="where">	
+		<isNotEmpty prepend="AND" property="bname">
+			bname = #bname#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="seq">
+		 	seq = #seq#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="title">
+		 	title = #title#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="content">
+		 	content = #content#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="writer">
+		 	writer = #writer#
+		</isNotEmpty>
+	</dynamic>	
+	order by groups desc , step asc
+	<isNotEmpty property="start">
+		<isNotEmpty property="end">
+	 		 limit $start$, $end$
+	 	</isNotEmpty>
+	</isNotEmpty>
+	
+  </select>
+  <select id="BoardCnt" parameterClass="java.util.Map" resultClass="Integer">
+	select count(*) from board	
+	<dynamic prepend="where">	
+		<isNotEmpty prepend="AND" property="bname">
+			bname = #bname#
+		</isNotEmpty>		
+	</dynamic>
+  </select>
+  
+   <insert id="BoardInsert" parameterClass="Board">
+    insert into board (
+    seq, writer, title, content, pwd, hit,
+    groups, step, level, bname, regdate )
+    values (
+     #seq#, #writer#, #title#, #content#, #pwd#, 0,
+    #groups#, #step#, #level#, #bname#, now()
+    )
+  </insert>
+  <select id="BoardMaxSeq" resultClass="Integer">
+	select ifnull(max(seq),0) from board
+  </select>
+  <update id='BoardStepUpdate' parameterClass="java.util.Map">
+		update board 
+		set step=step+1 
+		where groups = #groups# and step > #step#
+  </update>
+  <update id='BoardHitUpdate' parameterClass="java.util.Map">
+		update board 
+		set hit=hit+1 
+		where seq = #seq#
+  </update>
+  <update id='BoardUpdate' parameterClass="Board">
+		update board 
+		set writer = #writer# ,  
+		title = #title# , 
+		content = #content#,
+		pwd = #pwd# , 
+		regdate = now()
+		where seq = #seq#
+  </update>
+  <delete id="BoardDelete" parameterClass="Integer">
+    delete from board where seq = #value#
+  </delete>
+ 
+</sqlMap>
+
